@@ -24,5 +24,9 @@ module.exports = function(app) {
     // --- RUTAS ASISTENCIAS ---
     app.route('/api/attendances')
         .get(attendance.getAll)
-        .post(attendance.create);
+        .post(attendance.create)
+        .put(attendance.update);
+
+    app.route('/api/attendances/:id')
+        .delete(attendance.delete);
 };
