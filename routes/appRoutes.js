@@ -3,7 +3,6 @@ module.exports = function(app) {
     const clock = require('../controllers/clockController');
     const attendance = require('../controllers/attendanceController');
 
-    // --- RUTAS PERSONAL ---
     app.route('/api/people')
         .get(person.getAll)
         .post(person.create)
@@ -13,15 +12,18 @@ module.exports = function(app) {
         .get(person.getById)
         .delete(person.delete);
 
-    // --- RUTAS MARCAS DE RELOJ ---
     app.route('/api/clocks')
         .get(clock.getAll)
-        .post(clock.create);
+        .post(clock.create)
+        .put(clock.update); 
     
+    app.route('/api/clocks/:id')
+        .get(clock.getById)     
+        .delete(clock.delete);  
+
     app.route('/api/clocks/person/:idPerson')
         .get(clock.getByPersonId);
 
-    // --- RUTAS ASISTENCIAS ---
     app.route('/api/attendances')
         .get(attendance.getAll)
         .post(attendance.create)
