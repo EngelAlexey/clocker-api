@@ -57,8 +57,7 @@ exports.delete = (req, res) => {
 exports.searchByDate = (req, res) => {
     const data = fileHelper.readJson(FILE_NAME);
     const dateParam = req.query.date;
-    const result = data.filter(c => c.date && c.date.includes(dateParam));
-    res.json(result);
+    const result = data.filter(c => c.dateClock && c.dateClock.includes(dateParam)); res.json(result);
 };
 
 exports.searchByType = (req, res) => {
