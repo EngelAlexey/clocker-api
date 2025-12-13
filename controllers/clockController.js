@@ -9,7 +9,7 @@ exports.getAll = (req, res) => {
 exports.getById = (req, res) => {
     const data = fileHelper.readJson(FILE_NAME);
     const result = data.find(c => String(c.idClock) === String(req.params.id));
-    result ? res.json(result) : res.status(404).json({message: "Not found"});
+    result ? res.json(result) : res.status(404).json({ message: "Not found" });
 };
 
 exports.getByPersonId = (req, res) => {
@@ -21,7 +21,7 @@ exports.getByPersonId = (req, res) => {
 exports.create = (req, res) => {
     const data = fileHelper.readJson(FILE_NAME);
     const newClock = req.body;
-    if(!newClock.idClock) newClock.idClock = Date.now().toString();
+    if (!newClock.idClock) newClock.idClock = Date.now().toString();
     data.push(newClock);
     fileHelper.writeJson(FILE_NAME, data);
     res.status(201).json(newClock);
@@ -36,20 +36,34 @@ exports.update = (req, res) => {
         fileHelper.writeJson(FILE_NAME, data);
         res.json(updated);
     } else {
-        res.status(404).json({message: "Not found"});
+        res.status(404).json({ message: "Not found" });
     }
 };
 
 exports.delete = (req, res) => {
     let data = fileHelper.readJson(FILE_NAME);
     const initialLength = data.length;
-    
+
     const newData = data.filter(c => String(c.idClock) !== String(req.params.id));
-    
-    if(newData.length < initialLength){
+
+    if (newData.length < initialLength) {
         fileHelper.writeJson(FILE_NAME, newData);
-        res.json({message: "Deleted"});
+        res.json({ message: "Deleted" });
     } else {
-        res.status(404).json({message: "Not found"});
+        res.status(404).json({ message: "Not found" });
     }
+};
+
+exports.searchByDate = (req, res) => {
+    const data = fileHelper.readJson(FILE_NAME);
+    const dateParam = req.query.date;
+    const result = data.filter(c => c.date && c.date.includes(dateParam));
+    res.json(result);
+};
+
+exports.searchByType = (req, res) => {
+    const data = fileHelper.readJson(FILE_NAME);
+    const typeParam = req.query.type;
+    const result = data.filter(c => c.type === typeParam);
+    res.json(result);
 };
