@@ -1,5 +1,6 @@
 const fileHelper = require('../utils/fileHelper');
 const FILE_NAME = 'attendances.json';
+const CLOCKS_FILE = 'clocks.json';
 
 exports.getAll = (req, res) => {
     const data = fileHelper.readJson(FILE_NAME);
@@ -17,6 +18,23 @@ exports.create = (req, res) => {
     const newAttendance = req.body;
 
     if (!newAttendance.idAttendance) newAttendance.idAttendance = Date.now().toString();
+
+    if (!newAttendance.entryID || newAttendance.entryID === "") {
+        try {
+            const clocksData = fileHelper.readJson(CLOCKS_FILE);
+            const matchingClock = clocksData.find(c => 
+                String(c.idPerson) === String(newAttendance.idPerson) && 
+                c.type === 'Entry' &&
+                c.dateClock.startsWith(newAttendance.dateAttendance)
+            );
+
+            if (matchingClock) {
+                newAttendance.entryID = matchingClock.idClock;
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     data.push(newAttendance);
     fileHelper.writeJson(FILE_NAME, data);
